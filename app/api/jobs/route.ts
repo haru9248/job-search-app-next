@@ -5,7 +5,7 @@ export async function GET(): Promise<NextResponse> {
   const client = await pool.connect();
 
   try {
-    const res = await client.query(` SELECT jobs.id, jobs.salary, categories.name AS category_name, jobs.title FROM jobs JOIN categories ON jobs.category_id = categories.id ORDER BY jobs.created_at DESC`);
+    const res = await client.query(` SELECT jobs.id, jobs.salary, categories.name AS category_name, jobs.title FROM jobs JOIN categories ON jobs.category_id = categories.id`);
     return NextResponse.json(res.rows);
   } catch (error) {
     // エラーハンドリング

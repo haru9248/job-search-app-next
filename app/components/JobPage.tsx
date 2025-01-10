@@ -44,8 +44,7 @@ const JobPage: React.FC<JobPageProps> = ({ jobs }) => {
   // 現在のページに表示する求人を計算
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
-
+  const currentJobs = filteredJobs.length > 0 ? filteredJobs.slice(indexOfFirstJob, indexOfLastJob) : [];
   // ページネーションのボタン処理
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   const nextPage = () => setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(filteredJobs.length / jobsPerPage)));
