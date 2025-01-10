@@ -1,26 +1,34 @@
-import JobList from "./components/JobList";
 import JobPage from "./components/JobPage";
-import Sidebar from "./components/Sidebar";
 
 type Job = {
   id: number;
   title: string;
   salary: number;
   category_name: string;
-}
-async function fetchJobs(): Promise<Job[]> {
+};
+
+// サーバーサイドでデータを取得
+export async function getServerSideProps() {
   const res = await fetch('http://localhost:3000/api/jobs', {
-    cache: "no-store",
+    cache: "no-store", // キャッシュを無効化
   });
-  const data = await res.json();
-  console.log(data);
-  return data;
+  const data: Job[] = await res.json();
+
+  return {
+    props: {
+      jobs: data, // サーバーサイドで取得したデータをpropsとして渡す
+    },
+  };
 }
-export default async function Home() {
-  const jobs = await fetchJobs();
+
+type HomeProps = {
+  jobs: Job[];
+};
+
+export default function Home({ jobs }: HomeProps) {
   return (
     <div className="flex">
-      <JobPage jobs={jobs}/>
+      <JobPage jobs={jobs} />
     </div>
   );
 }
