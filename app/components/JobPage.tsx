@@ -29,6 +29,7 @@ const JobPage: React.FC<JobPageProps> = ({ jobs }) => {
   // フィルター変更時に呼ばれる関数
   const handleFilterChange = (newFilters: { category: string[]; salary: number | null }) => {
     setFilters(newFilters);
+    console.log(filters);
 
     // 新しいフィルターに基づいて求人をフィルタリング
     const filtered = jobs.filter((job) => {
