@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const categories = [
     { id: 1, name: "事務" },
@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onFilterChange }) => {
   };
 
   // フィルターが変更されたときに親コンポーネントに通知
-  React.useEffect(() => {
+  useEffect(() => {
     onFilterChange({ category: selectedCategories, salary: selectedSalary });
   }, [selectedCategories, selectedSalary]);
 

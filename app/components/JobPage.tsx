@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import JobList from "./JobList";
 import Sidebar from "./Sidebar";
 
