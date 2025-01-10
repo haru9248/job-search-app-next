@@ -9,7 +9,8 @@ const page = () => {
         const title = formData.get('title');
         const salary = formData.get('salary');
         const category = formData.get('category');
-        await fetch('http://localhost:3000/api/post', {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+        await fetch(`${apiUrl}/post`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

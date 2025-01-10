@@ -7,7 +7,8 @@ type Job = {
   category_name: string;
 }
 async function fetchJobs(): Promise<Job[]> {
-  const res = await fetch('http://localhost:3000/api/jobs', {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  const res = await fetch(`${apiUrl}/jobs`, {
     cache: "no-store",
   });
   const data = await res.json();
