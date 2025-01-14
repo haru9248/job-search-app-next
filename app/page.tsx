@@ -8,12 +8,20 @@ type Job = {
 }
 async function fetchJobs(): Promise<Job[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-  const res = await fetch(`${apiUrl}/api/jobs`, {
+  try {
+    const res = await fetch(`${apiUrl}/api/jobs`, {
     cache: "no-store",
   });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch jobs: ${res.statusText}`);
+  }
   const data = await res.json();
   console.log("GetData:", data);
   return data;
+} catch (error) {
+  console.error("Error fetching jobs:", error);
+  return [];
+ }
 }
 export default async function Home() {
   const jobs = await fetchJobs();
