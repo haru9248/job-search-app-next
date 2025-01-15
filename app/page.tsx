@@ -1,5 +1,5 @@
 
-import JobPage from "./components/JobPage";
+// import JobPage from "./components/JobPage";
 
 type Job = {
   id: number;
@@ -8,7 +8,7 @@ type Job = {
   category_name: string;
 }
 async function fetchJobs(): Promise<Job[]> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL  || "http://localhost:3000";
   try {
     const res = await fetch(`${apiUrl}/api/jobs`, {
     cache: "no-store",
@@ -28,7 +28,16 @@ export default async function Home() {
   const jobs = await fetchJobs();
   return (
     <div className="flex">
-      <JobPage jobs={jobs}/>
+      <ul>
+        {jobs.map((job) => (
+          <li key={job.id}>
+            <h2>{job.title}</h2>
+            <p>カテゴリ：{job.category_name}</p>
+            <p>年収：{job.salary}</p>
+          </li>
+        ))}
+      </ul>
+      {/* <JobPage jobs={jobs}/> */}
     </div>
   );
 }

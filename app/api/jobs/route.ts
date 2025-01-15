@@ -17,4 +17,3 @@ export async function GET(): Promise<NextResponse> {
     client.release();
   }
 }
-
