@@ -1,6 +1,8 @@
 
 // import JobPage from "./components/JobPage";
 
+import Sidebar from "./components/Sidebar";
+
 type Job = {
   id: number;
   title: string;
@@ -29,6 +31,10 @@ export default async function Home({ searchParams }: { searchParams: { category:
   const jobs = await fetchJobs(category, salary);
   return (
     <div className="flex">
+      <Sidebar />
+     <div>
+      <h2>求人一覧</h2>
+      <p>該当件数：${jobs.length}件</p>
       <ul>
         {jobs.map((job) => (
           <li key={job.id}>
@@ -38,7 +44,7 @@ export default async function Home({ searchParams }: { searchParams: { category:
           </li>
         ))}
       </ul>
-      {/* <JobPage jobs={jobs}/> */}
+      </div>
     </div>
   );
 }
