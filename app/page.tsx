@@ -1,6 +1,5 @@
 
-// import JobPage from "./components/JobPage";
-
+import PageQuery from "./components/PageQuery";
 import Sidebar from "./components/Sidebar";
 
 type Job = {
@@ -9,42 +8,50 @@ type Job = {
   salary: number;
   category_name: string;
 }
-async function fetchJobs(category: string, salary: number): Promise<Job[]> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL  || "http://localhost:3000";
-  try {
-    const res = await fetch(`${apiUrl}/api/jobs?category=${category}&salary=${salary}`, {
+
+type fetchJobsResponse = {
+  jobs: Job[];
+  totalPages: number;
+  totalJobs: number;
+}
+async function fetchJobs(category: string | null, salary: number | null, page: number): Promise<fetchJobsResponse> {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const response = await fetch(`${apiUrl}/api/jobs?category=${category}&salary=${salary}&page=${page}`, {
     cache: "no-store",
   });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch jobs: ${res.statusText}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch jobs');
   }
-  const data = await res.json();
-  console.log("GetData:", data);
-  return data;
-} catch (error) {
-  console.error("Error fetching jobs:", error);
-  return [];
- }
-}
-export default async function Home({ searchParams }: { searchParams: { category: string, salary: number }}) {
-  const { category= '', salary = 0 } = searchParams;
-  const jobs = await fetchJobs(category, salary);
+
+  const data = await response.json();
+  return {
+    jobs: data.jobs,
+    totalPages: data.totalPages,
+    totalJobs: data.totalJobs,
+}}
+export default async function Home({ searchParams }: { searchParams: { category?: string, salary?: number, page?: string }}) {
+  const { category, salary, page = '1' } = searchParams;
+  const currentPage = parseInt(page, 10);
+  const { jobs, totalPages, totalJobs }: fetchJobsResponse = await fetchJobs(category || '', salary || 300, currentPage);
   return (
+    <div>
     <div className="flex">
       <Sidebar />
-     <div>
-      <h2>求人一覧</h2>
-      <p>該当件数：${jobs.length}件</p>
+     <div className="p-4 pl-7 w-full">
+      <h2 className="text-xl font-bold">求人一覧</h2>
+      <p className="mb-5">該当件数：{totalJobs}件</p>
       <ul>
         {jobs.map((job) => (
-          <li key={job.id}>
-            <h2>{job.title}</h2>
+          <li className="border-2 rounded-md w-full mr-4 mb-5 pb-5 p-2" key={job.id}>
+            <h2 className="font-bold text-xl">{job.title}</h2>
             <p>カテゴリ：{job.category_name}</p>
-            <p>年収：{job.salary}</p>
+            <p>年収：{job.salary}万円</p>
           </li>
         ))}
       </ul>
+      <PageQuery currentPage={currentPage} totalPages={totalPages}/>
       </div>
+    </div>
     </div>
   );
 }

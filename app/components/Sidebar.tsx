@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // App Router を使用
+import { useRouter, useSearchParams} from 'next/navigation'; // App Router を使用
 
 const categories = [
   { id: 1, name: "事務" },
@@ -18,7 +18,7 @@ const categories = [
 
 const Sidebar: React.FC = () => {
   const router = useRouter();
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const searchParams = useSearchParams();  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSalary, setSelectedSalary] = useState<string>("300");
 
   // カテゴリーチェックボックスの変更処理
@@ -37,13 +37,17 @@ const Sidebar: React.FC = () => {
 
   // URLのクエリを更新する関数
   const updateQueryParams = () => {
-    // 選択されたカテゴリーをクエリパラメータ形式に変換
+   
+    const currentPage = searchParams.get("page") || "1";
+
+ 
     const categoryQuery = selectedCategories.join(',');
     const salaryQuery = selectedSalary;
 
-    // URLにクエリをセット
-    router.push(`/?category=${categoryQuery}&salary=${salaryQuery}`);
+  
+    router.push(`/?category=${categoryQuery}&salary=${salaryQuery}&page=${currentPage}`);
   };
+
 
   // フィルター変更時にURLを更新
   useEffect(() => {
