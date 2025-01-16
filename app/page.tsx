@@ -7,10 +7,10 @@ type Job = {
   salary: number;
   category_name: string;
 }
-async function fetchJobs(): Promise<Job[]> {
+async function fetchJobs(category: string, salary: number): Promise<Job[]> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL  || "http://localhost:3000";
   try {
-    const res = await fetch(`${apiUrl}/api/jobs`, {
+    const res = await fetch(`${apiUrl}/api/jobs?category=${category}&salary=${salary}`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -24,8 +24,9 @@ async function fetchJobs(): Promise<Job[]> {
   return [];
  }
 }
-export default async function Home() {
-  const jobs = await fetchJobs();
+export default async function Home({ searchParams }: { searchParams: { category: string, salary: number }}) {
+  const { category= '', salary = 0 } = searchParams;
+  const jobs = await fetchJobs(category, salary);
   return (
     <div className="flex">
       <ul>
