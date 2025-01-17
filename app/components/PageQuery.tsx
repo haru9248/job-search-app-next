@@ -6,14 +6,20 @@ import React from 'react';
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  category?: string;
+  salary?: number;
 }
 
-const PageQuery = ({ currentPage, totalPages }: PaginationProps) => {
+const PageQuery = ({ currentPage, totalPages, category, salary }: PaginationProps) => {
   const router = useRouter();
 
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return;  // 範囲外のページに遷移しないように
-    router.push(`/?page=${newPage}`);
+    const query = new URLSearchParams(window.location.search);
+    query.set('page', newPage.toString());
+    if (category) query.set('category', category);
+    if (salary) query.set('salary', salary.toString());
+    router.push(`/?${query.toString()}`);
   };
 
   const generatePageNumbers = () => {
